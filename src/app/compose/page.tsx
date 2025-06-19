@@ -87,7 +87,7 @@ export default function ComposePage() {
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="subject">Subject</Label>
-            <Input id="subject" placeholder="Enter email subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
+            <Input id="subject" type="text" placeholder="Enter email subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="body">Body</Label>
