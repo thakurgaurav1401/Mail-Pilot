@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import React, { useEffect, useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'; // Added SheetHeader and SheetTitle
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -105,8 +105,6 @@ const Sidebar = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }: SidebarProps) 
 
 
   if (!hasMounted) {
-    // Simplified SSR/initial render to prevent hydration issues with interactive elements.
-    // Shows a basic, non-interactive version of the sidebar.
     return (
       <aside className="hidden w-64 flex-col bg-sidebar text-sidebar-foreground md:flex">
         <div className="flex items-center justify-between border-b border-sidebar-border p-4">
@@ -114,7 +112,6 @@ const Sidebar = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }: SidebarProps) 
               <Mail className="h-8 w-8 text-sidebar-primary" />
               <span className="text-xl font-bold">MailPilot</span>
             </div>
-            {/* Placeholder for collapse button to maintain layout consistency */}
             <div className="h-10 w-10 p-2"> 
                 <PanelLeft className="h-5 w-5 opacity-0" />
             </div>
@@ -137,9 +134,11 @@ const Sidebar = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }: SidebarProps) 
   if (isMobile) {
     return (
       <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
-        <SheetContent side="left" className="w-[280px] bg-sidebar p-0 text-sidebar-foreground flex flex-col overflow-y-auto">
-          {/* The SheetHeader has been removed as per user request */}
-          <div className="flex flex-col flex-grow"> {/* Wrapper for content to scroll */}
+        <SheetContent side="left" className="w-[280px] bg-sidebar p-0 text-sidebar-foreground flex flex-col">
+           <SheetHeader className="sr-only"> {/* Visually hidden header for accessibility */}
+            <SheetTitle>Menu</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col flex-grow overflow-y-auto"> {/* Wrapper for scrollable content */}
             <SidebarNavigation collapsed={false} />
           </div>
         </SheetContent>
