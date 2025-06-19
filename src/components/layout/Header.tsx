@@ -9,7 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Menu } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const getPageTitle = (pathname: string): string => {
   if (pathname === '/') return 'Dashboard';
@@ -21,13 +23,26 @@ const getPageTitle = (pathname: string): string => {
   return 'MailPilot';
 };
 
-const Header = () => {
+interface HeaderProps {
+  onMobileMenuToggle: () => void;
+}
+
+const Header = ({ onMobileMenuToggle }: HeaderProps) => {
   const pathname = usePathname();
   const pageTitle = getPageTitle(pathname);
+  const isMobile = useIsMobile();
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-6 backdrop-blur-md">
-      <h1 className="text-xl font-semibold text-foreground">{pageTitle}</h1>
+      <div className="flex items-center gap-2">
+        {isMobile && (
+          <Button variant="ghost" size="icon" onClick={onMobileMenuToggle} className="md:hidden">
+            <Menu className="h-6 w-6" />
+            <span className="sr-only">Open sidebar</span>
+          </Button>
+        )}
+        <h1 className="text-xl font-semibold text-foreground">{pageTitle}</h1>
+      </div>
       <div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
