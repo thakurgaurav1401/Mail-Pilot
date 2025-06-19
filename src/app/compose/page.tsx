@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -29,6 +30,7 @@ export default function ComposePage() {
   const [scheduledAt, setScheduledAt] = useState<Date | undefined>();
   const [previewRecipient, setPreviewRecipient] = useState<Recipient | undefined>(mockRecipients[0]);
   const [templates] = useLocalStorage<EmailTemplate[]>('emailTemplates', []);
+  const [, setEmailsSentCount] = useLocalStorage<number>('emailsSentCount', 0);
   const { toast } = useToast();
 
   const handleLoadTemplate = (templateId: string) => {
@@ -45,7 +47,7 @@ export default function ComposePage() {
     let personalizedContent = content;
     Object.keys(recipient).forEach(key => {
       const regex = new RegExp(`{{${key}}}`, 'g');
-      personalizedContent = personalizedContent.replace(regex, recipient[key]);
+      personalizedContent = personalizedContent.replace(regex, (recipient as any)[key]);
     });
     return personalizedContent;
   };
@@ -61,6 +63,9 @@ export default function ComposePage() {
     }
     // Mock sending logic
     toast({ title: 'Email Sent!', description: `Your email "${subject}" has been sent to ${selectedRecipients.length} recipients.` });
+    
+    // Increment the total emails sent count
+    setEmailsSentCount(prevCount => prevCount + selectedRecipients.length);
   };
   
   const handleSchedule = () => {

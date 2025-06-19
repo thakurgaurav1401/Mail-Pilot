@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BarChart, CheckCircle, TrendingUp, Users, Mail, Edit3, LayoutTemplate, Wand2 } from "lucide-react";
+import useLocalStorage from '@/hooks/useLocalStorage';
+import type { Recipient } from '@/lib/types';
 
 interface StatCardProps {
   title: string;
@@ -30,26 +32,29 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, descripti
 
 interface Campaign {
   name: string;
-  sentDate: string; // Store as ISO string or raw date, format in effect
+  sentDate: string; 
 }
 
-const initialCampaigns: Campaign[] = [
-  { name: 'Summer Sale Blast', sentDate: new Date(Date.now() - 0 * 24 * 60 * 60 * 1000).toISOString() },
-  { name: 'New Product Launch', sentDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() },
-  { name: 'Weekly Newsletter #12', sentDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() },
-];
+// Start with an empty array for recent campaigns
+const initialCampaigns: Campaign[] = [];
 
 
 export default function DashboardPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [recipientsList] = useLocalStorage<Recipient[]>('recipientsList', []);
+  const [emailsSentCount] = useLocalStorage<number>('emailsSentCount', 0);
 
   useEffect(() => {
-    // Format dates on the client side after hydration
-    const formattedCampaigns = initialCampaigns.map(campaign => ({
-      ...campaign,
-      sentDate: new Date(campaign.sentDate).toLocaleDateString(),
-    }));
-    setCampaigns(formattedCampaigns);
+    // Format dates on the client side after hydration if there are any campaigns
+    if (initialCampaigns.length > 0) {
+      const formattedCampaigns = initialCampaigns.map(campaign => ({
+        ...campaign,
+        sentDate: new Date(campaign.sentDate).toLocaleDateString(),
+      }));
+      setCampaigns(formattedCampaigns);
+    } else {
+      setCampaigns([]);
+    }
   }, []);
 
   return (
@@ -68,10 +73,10 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Total Recipients" value="1,234" icon={Users} description="+201 this month" color="text-blue-500" />
-        <StatCard title="Emails Sent" value="5,678" icon={CheckCircle} description="Last campaign: 500" color="text-green-500" />
-        <StatCard title="Open Rate" value="23.5%" icon={TrendingUp} description="Avg. for industry: 18%" color="text-yellow-500" />
-        <StatCard title="Click Rate" value="4.2%" icon={BarChart} description="Target: 5%" color="text-purple-500" />
+        <StatCard title="Total Recipients" value={recipientsList.length.toString()} icon={Users} description="+201 this month" color="text-blue-500" />
+        <StatCard title="Emails Sent" value={emailsSentCount.toString()} icon={CheckCircle} description="Last campaign: 500" color="text-green-500" />
+        <StatCard title="Open Rate" value="0%" icon={TrendingUp} description="Avg. for industry: 18%" color="text-yellow-500" />
+        <StatCard title="Click Rate" value="0%" icon={BarChart} description="Target: 5%" color="text-purple-500" />
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
@@ -82,7 +87,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {campaigns.length === 0 ? (
-               <p className="text-sm text-muted-foreground">Loading campaigns...</p>
+               <p className="text-sm text-muted-foreground">No recent campaigns to display.</p>
             ) : (
             <ul className="space-y-3">
               {campaigns.map((campaign, index) => (
