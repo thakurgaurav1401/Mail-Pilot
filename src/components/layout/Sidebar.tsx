@@ -138,7 +138,7 @@ const Sidebar = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }: SidebarProps) 
            <SheetHeader className="p-4 border-b border-sidebar-border flex flex-row items-center justify-between sticky top-0 bg-sidebar z-10">
              <SheetTitle className="flex items-center gap-2">
                 <Mail className="h-8 w-8 text-sidebar-primary" />
-                <span className="text-xl font-bold">MailPilot Menu</span>
+                <span className="text-xl font-bold">MailPilot</span>
              </SheetTitle>
             <SheetClose asChild>
               <Button variant="ghost" size="icon" className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
