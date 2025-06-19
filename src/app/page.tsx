@@ -1,4 +1,7 @@
 
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -25,8 +28,30 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, descripti
   </Card>
 );
 
+interface Campaign {
+  name: string;
+  sentDate: string; // Store as ISO string or raw date, format in effect
+}
+
+const initialCampaigns: Campaign[] = [
+  { name: 'Summer Sale Blast', sentDate: new Date(Date.now() - 0 * 24 * 60 * 60 * 1000).toISOString() },
+  { name: 'New Product Launch', sentDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() },
+  { name: 'Weekly Newsletter #12', sentDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() },
+];
+
 
 export default function DashboardPage() {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+
+  useEffect(() => {
+    // Format dates on the client side after hydration
+    const formattedCampaigns = initialCampaigns.map(campaign => ({
+      ...campaign,
+      sentDate: new Date(campaign.sentDate).toLocaleDateString(),
+    }));
+    setCampaigns(formattedCampaigns);
+  }, []);
+
   return (
     <div className="container mx-auto py-8">
       <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
@@ -56,18 +81,21 @@ export default function DashboardPage() {
             <CardDescription>Overview of your latest email campaigns.</CardDescription>
           </CardHeader>
           <CardContent>
-            {/* Placeholder for recent campaigns list */}
+            {campaigns.length === 0 ? (
+               <p className="text-sm text-muted-foreground">Loading campaigns...</p>
+            ) : (
             <ul className="space-y-3">
-              {['Summer Sale Blast', 'New Product Launch', 'Weekly Newsletter #12'].map((campaign, index) => (
+              {campaigns.map((campaign, index) => (
                 <li key={index} className="flex items-center justify-between rounded-md border p-3 shadow-sm">
                   <div>
-                    <p className="font-medium">{campaign}</p>
-                    <p className="text-sm text-muted-foreground">Sent: {new Date(Date.now() - index * 24 * 60 * 60 * 1000).toLocaleDateString()}</p>
+                    <p className="font-medium">{campaign.name}</p>
+                    <p className="text-sm text-muted-foreground">Sent: {campaign.sentDate}</p>
                   </div>
                   <Button variant="outline" size="sm">View Report</Button>
                 </li>
               ))}
             </ul>
+            )}
           </CardContent>
         </Card>
         
