@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import React, { useEffect, useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Sheet, SheetContent, SheetHeader, SheetClose } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from '@/components/ui/sheet';
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -136,10 +136,10 @@ const Sidebar = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }: SidebarProps) 
       <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
         <SheetContent side="left" className="w-[280px] bg-sidebar p-0 text-sidebar-foreground flex flex-col overflow-y-auto">
            <SheetHeader className="p-4 border-b border-sidebar-border flex flex-row items-center justify-between sticky top-0 bg-sidebar z-10">
-             <Link href="/" className="flex items-center gap-2" onClick={handleLinkClick}>
+             <SheetTitle className="flex items-center gap-2">
                 <Mail className="h-8 w-8 text-sidebar-primary" />
-                <span className="text-xl font-bold">MailPilot</span>
-             </Link>
+                <span className="text-xl font-bold">MailPilot Menu</span>
+             </SheetTitle>
             <SheetClose asChild>
               <Button variant="ghost" size="icon" className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                 <X className="h-5 w-5" />
