@@ -1,5 +1,6 @@
-#Mail Pilot is used to send bulk mail.
 
-This is a NextJS project.
-
-To get started, take a look at src/app/page.tsx.
+<<<<<<< HEAD
+This is the version from GitHub
+=======
+This is your local version
+>>>>>>> f8c0b50... WIP: local changes before pull
